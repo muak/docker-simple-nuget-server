@@ -1,2 +1,2 @@
-docker build -t rolfwessels/docker-simple-nuget-server:latest .
+docker build -t muak/docker-simple-nuget-server:latest .
 

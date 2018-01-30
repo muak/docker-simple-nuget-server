@@ -12,7 +12,7 @@ ENV NUGET_API_KEY=e46c582041db4cbe86a84b76a374383a
 ENV NUGET_DEFAULT_HTTP=http
 
 
-RUN git clone https://github.com/rolfwessels/simple-nuget-server.git $NUGET_PATH && \
+RUN git clone https://github.com/muak/simple-nuget-server.git $NUGET_PATH && \
     chown www-data:www-data $NUGET_PATH/db $NUGET_PATH/packagefiles && \
     chmod 0770 $NUGET_PATH/db $NUGET_PATH/packagefiles 
 
