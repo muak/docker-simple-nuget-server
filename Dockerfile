@@ -1,8 +1,15 @@
 FROM nginx:1.13
 
-RUN apt-get update && \
-    apt-get install --no-install-recommends -y  git  php7.0-fpm php7.0-sqlite php7.0-xml php7.0-zip apt-utils apt-transport-https ca-certificates
+#add user group
+ARG AGENT_UID=1000
+ARG AGENT_GID=1000
+RUN groupadd -g ${AGENT_GID} nginx_docker\
+    && useradd -d /home/docker -u ${AGENT_UID} -g nginx_docker nginx_docker
+    && sed -ie "s/nginx;/nginx_docker;/" /etc/nginx/nginx.conf
 
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y  git  php7.0-fpm php7.0-sqlite php7.0-xml php7.0-zip apt-utils apt-transport-https ca-certificates 
+	
 # for testings
 RUN apt-get install --no-install-recommends -y  nano curl mc
 
@@ -36,8 +43,7 @@ RUN sed -i -- 's/.*upload_max_filesize.*=.*/upload_max_filesize = 20M/g' /etc/ph
 RUN sed -i -- 's/;listen.mode = .*/listen.mode = 0660/g' /etc/php/7.0/fpm/pool.d/www.conf && \
     cat /etc/php/7.0/fpm/pool.d/www.conf | grep listen.
 
-RUN usermod -u 1000 www-data \ 
-    && groupmod -g 1000 www-data
+#RUN usermod -G www-data nginx
 RUN nginx -t
 
 COPY init.sh /
