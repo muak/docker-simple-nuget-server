@@ -1,4 +1,4 @@
-FROM nginx:1.13
+FROM nginx:latest
 
 #add user group
 ARG AGENT_UID=1000
@@ -38,13 +38,17 @@ RUN sed -i -- 's/.*upload_max_filesize.*=.*/upload_max_filesize = 20M/g' /etc/ph
     sed -i -- 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.0/fpm/php.ini && \
     cat /etc/php/7.0/fpm/php.ini | grep upload_max_filesize
 
-
+RUN sed -i -- 's/user = .*/user = nginx_docker/g' /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -- 's/group = .*/group = nginx_docker/g' /etc/php/7.0/fpm/pool.d/www.conf && \
+    cat /etc/php/7.0/fpm/pool.d/www.conf
 
 RUN sed -i -- 's/;listen.mode = .*/listen.mode = 0660/g' /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -- 's/listen.owner = .*/listen.owner = nginx_docker/g' /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -- 's/listen.group = .*/listen.group = nginx_docker/g' /etc/php/7.0/fpm/pool.d/www.conf && \
     cat /etc/php/7.0/fpm/pool.d/www.conf | grep listen.
 
 #RUN usermod -G www-data nginx
-RUN nginx -t
+#RUN nginx -t
 
 COPY init.sh /
 EXPOSE 80
