@@ -36,7 +36,8 @@ RUN sed -i -- 's/.*upload_max_filesize.*=.*/upload_max_filesize = 20M/g' /etc/ph
 RUN sed -i -- 's/;listen.mode = .*/listen.mode = 0660/g' /etc/php/7.0/fpm/pool.d/www.conf && \
     cat /etc/php/7.0/fpm/pool.d/www.conf | grep listen.
 
-RUN usermod -G www-data nginx
+RUN usermod -u 1000 www-data \ 
+    && groupmod -g 1000 www-data
 RUN nginx -t
 
 COPY init.sh /
