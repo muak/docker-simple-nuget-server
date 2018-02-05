@@ -3,8 +3,8 @@ FROM nginx:1.13
 #add user group
 ARG AGENT_UID=1000
 ARG AGENT_GID=1000
-RUN groupadd -g ${AGENT_GID} nginx_docker\
-    && useradd -d /home/docker -u ${AGENT_UID} -g nginx_docker nginx_docker
+RUN groupadd -g ${AGENT_GID} nginx_docker \
+    && useradd -d /home/docker -u ${AGENT_UID} -g nginx_docker nginx_docker \
     && sed -ie "s/nginx;/nginx_docker;/" /etc/nginx/nginx.conf
 
 RUN apt-get update && \
